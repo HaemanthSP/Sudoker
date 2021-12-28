@@ -4,13 +4,13 @@
     <style name="number_button">
         <item name="android:layout_width">45dp</item>
         <item name="android:layout_height">45dp</item>
-        <item name="android:background">@drawable/puzzle_card</item>
+        <item name="android:background">@drawable/app_background</item>
         <item name="android:padding">5dp</item>
         <item name="android:textSize">24dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:elevation">5dp</item>
         <item name="android:fontFamily">monospace</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">#CDDC39</item>
     </style>
 </resources>

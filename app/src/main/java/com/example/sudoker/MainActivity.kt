@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.sudoker
 
 import android.app.Activity
 import android.os.Bundle

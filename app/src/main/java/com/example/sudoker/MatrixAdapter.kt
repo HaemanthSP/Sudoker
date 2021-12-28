@@ -1,13 +1,11 @@
-package com.example.myapplication
+package com.example.sudoker
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.BaseAdapter
 import android.view.ViewGroup
-import com.example.myapplication.R
-import com.example.myapplication.databinding.GridBlockBinding
-import com.example.myapplication.databinding.GridItemBinding
+import com.example.sudoker.databinding.GridBlockBinding
+import com.example.sudoker.databinding.GridItemBinding
 
 class MatrixAdapter(var context: Context, var matrixList: List<Matrix>) : BaseAdapter() {
     override fun getCount(): Int {

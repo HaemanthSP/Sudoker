@@ -6,9 +6,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cell_container"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="#FFFFFF">
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/app_background">
 
         <TextView
             android:id="@+id/cell"
@@ -17,7 +17,7 @@
             android:fontFamily="monospace"
             android:text="1"
             android:textAlignment="center"
-            android:textColor="#E65100"
+            android:textColor="#CDDC39"
             android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
