@@ -45,7 +45,7 @@ class BlockAdapter(var context: Context, var blockList: List<Block>) : BaseAdapt
         val v = View.inflate(context, R.layout.grid_block, null)
         val gridBlockBinding= GridBlockBinding.bind(v)
 
-        val rows = 3
+//        val rows = 3
         val columns = 3
         gridBlockBinding.gridBlock.numColumns = columns
 

@@ -2,7 +2,6 @@ package com.example.sudoker
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.GridView
 
 
@@ -10,9 +9,9 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+//        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_old)
 
         val rows = 3
         val columns = 3

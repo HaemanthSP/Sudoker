@@ -3,14 +3,13 @@ package com.example.sudoker;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-public class PuzzleGrid {
+public class SudokuGrid {
     private Context mContext;
     private GridView mGridView;
     private Cell[][] mCells = new Cell[9][9];
@@ -18,7 +17,7 @@ public class PuzzleGrid {
     private Cell mSelectedCell;
     private int[][] mSolution = new int[9][9];
 
-    public PuzzleGrid(Context context, int[][] masks, int[][] solution) {
+    public SudokuGrid(Context context, int[][] masks, int[][] solution) {
         mContext = context;
         mGridView = ((Activity) context).findViewById(R.id.grid_sudoku);
 
@@ -32,7 +31,7 @@ public class PuzzleGrid {
                 int highlightColor = (solution[row][col] <= 9) ? R.color.HIGHLIGHT_LOCKED_CELL_COLOR : R.color.HIGHLIGHT_EMPTY_CELL_COLOR;
                 int defaultColor = (box % 2 == 0) ? R.color.EVEN_BOX_COLOR : R.color.ODD_BOX_COLOR;
 
-                mCells[row][col] = new Cell(context, row * 9 + col, highlightColor, defaultColor);
+                mCells[row][col] = new Cell(context.getApplicationContext(), row * 9 + col, highlightColor, defaultColor);
                 mCells[row][col].setMask(masks[row][col]);
             }
         }
@@ -44,7 +43,7 @@ public class PuzzleGrid {
             mBoxes[i].setAdapter(boxAdapter);
         }
 
-        PuzzleGridAdapter gridAdapter = new PuzzleGridAdapter(mBoxes);
+        SudokuGridAdapter gridAdapter = new SudokuGridAdapter(mBoxes);
         mGridView.setAdapter(gridAdapter);
     }
 
@@ -171,10 +170,10 @@ public class PuzzleGrid {
     }
 
     /* Grid adapter */
-    public class PuzzleGridAdapter extends BaseAdapter {
+    public class SudokuGridAdapter extends BaseAdapter {
         Box[] mBoxes;
 
-        public PuzzleGridAdapter(Box[] boxes) {
+        public SudokuGridAdapter(Box[] boxes) {
             mBoxes = boxes;
         }
         @Override
@@ -238,7 +237,6 @@ public class PuzzleGrid {
         public View getView(int position, View view, ViewGroup viewGroup) {
             int row = (mIndex / 3) * 3 + position / 3;
             int col = (mIndex % 3) * 3 + position % 3;
-            Log.d("Grid", "Fetching View for the grid: " + mCells[row][col]);
             return mCells[row][col];
         }
     }

@@ -9,6 +9,8 @@ import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
@@ -20,8 +22,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -29,11 +29,9 @@ public class GameActivity extends AppCompatActivity {
     static public final int[] NUMBER_OF_EMPTY_CELLS = {0, 30, 35, 45, 50};
     static public final String[] DIFFICULT_NAME = {"NONE", "Easy", "Normal", "Hard", "Extreme"};
 
-    static private PuzzleGrid grid;
+    static private SudokuGrid grid;
     static private Numpad numpad;
     static private Stack<CellState> stack = new Stack<>();
-
-    static private Timer timer;
 
     SudokuSolver solver = new SudokuSolver();
 
@@ -42,7 +40,7 @@ public class GameActivity extends AppCompatActivity {
     private int[][] solution;
     private int difficulty;
     static private int status; // -3 game done | -2: auto solved | -1: auto fill | 0: playing | 1: player solved
-//    private Timer timer;
+    private Timer timer;
 
     private void generateGrid() {
         // generate a grid
@@ -61,7 +59,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        grid = new PuzzleGrid(this, masks, solution);
+        grid = new SudokuGrid(this, masks, solution);
     }
 
     private void restoreGrid(String solutionString, String gridString) {
@@ -82,25 +80,25 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        grid = new PuzzleGrid(this, masks, solution);
+        grid = new SudokuGrid(this, masks, solution);
     }
 
-//    private void saveGame() {
-//        if (status < -1) return;
-//        int[][] currentMask = grid.getCurrentMasks();
-//        GameState state = new GameState(status, difficulty, timer.getElapsedSeconds(), solution, currentMask);
-//        try {
-//            DatabaseHelper DBHelper = DatabaseHelper.newInstance(this);
-//            SQLiteDatabase database = DBHelper.getWritableDatabase();
-//            database.insert("GameState", null, state.getContentValues());
-//        } catch (Exception e) {
-//            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-//        }
-//    }
+    private void saveGame() {
+        if (status < -1) return;
+        int[][] currentMask = grid.getCurrentMasks();
+        GameState state = new GameState(status, difficulty, timer.getElapsedSeconds(), solution, currentMask);
+        try {
+            DatabaseHelper DBHelper = DatabaseHelper.newInstance(this);
+            SQLiteDatabase database = DBHelper.getWritableDatabase();
+            database.insert("GameState", null, state.getContentValues());
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     protected void onPause() {
-//        saveGame();
+        saveGame();
         super.onPause();
     }
 
@@ -122,69 +120,69 @@ public class GameActivity extends AppCompatActivity {
         }, 3000);
     }
 
-//    @SuppressLint("ResourceType")
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu, menu);
-//        return true;
-//    }
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_solve:
-//                onClickSolve();
-//                break;
-//            case R.id.action_reset:
-//                onClickReset();
-//                break;
-//            case R.id.action_autofill:
-//                onClickAutoFill();
-//                break;
-//            case R.id.action_tutorial:
-//                onClickTutorial();
-//                break;
-//            default:
-//                break;
-//        }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_solve:
+                onClickSolve();
+                break;
+            case R.id.action_reset:
+                onClickReset();
+                break;
+            case R.id.action_autofill:
+                onClickAutoFill();
+                break;
+            case R.id.action_tutorial:
+                onClickTutorial();
+                break;
+            default:
+                break;
+        }
 
-//        return true;
-//    }
+        return true;
+    }
 
-//    private void onClickAutoFill() {
-//        if (status < -1) return;
-//        if (status == -1) {
-//            autoFill();
-//        } else {
-//            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
-//            dialog.setMessage("Nếu sử dụng tính năng này, kết quả của bạn sẽ không được công nhận trên bảng xếp hạng. \nBạn có chắc chắn muốn sử dụng?")
-//                    .setTitle("Chú ý\n")
-//                    .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            status = -1;
-//                            autoFill();
-//                        }
-//                    })
-//                    .setNegativeButton("Từ chối", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            dialogInterface.cancel();
-//                        }
-//                    })
-//                    .show();
-//        }
-//    }
+    private void onClickAutoFill() {
+        if (status < -1) return;
+        if (status == -1) {
+            autoFill();
+        } else {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
+            dialog.setMessage("Nếu sử dụng tính năng này, kết quả của bạn sẽ không được công nhận trên bảng xếp hạng. \nBạn có chắc chắn muốn sử dụng?")
+                    .setTitle("Chú ý\n")
+                    .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            status = -1;
+                            autoFill();
+                        }
+                    })
+                    .setNegativeButton("Từ chối", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    })
+                    .show();
+        }
+    }
 
-//    private void onClickTutorial() {
-////        AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.MyTutorialTheme);
-////        Spannable message = SpannableWithImage.getTextWithImages(this, getString(R.string.tutorial), 50);
+    private void onClickTutorial() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.MyTutorialTheme);
+        Spannable message = SpannableWithImage.getTextWithImages(this, getString(R.string.tutorial), 50);
 
-//        int position = getString(R.string.tutorial).indexOf("Chú ý:");
-//        message.setSpan(new RelativeSizeSpan(1.2f), position, position + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        dialog.setMessage(message).setTitle("Hướng dẫn").show();
-//    }
+        int position = getString(R.string.tutorial).indexOf("Chú ý:");
+        message.setSpan(new RelativeSizeSpan(1.2f), position, position + 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        dialog.setMessage(message).setTitle("Hướng dẫn").show();
+    }
 
     private void autoFill() {
         grid.fill();
@@ -197,12 +195,9 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        // Intent request
-//        Bundle bundle = getIntent().getExtras();
-//        difficulty = bundle.getInt("difficulty", 0);
-//        status = bundle.getInt("status", 0);
-        difficulty = 0;
-        status = 0;
+        Bundle bundle = getIntent().getExtras();
+        difficulty = bundle.getInt("difficulty", 0);
+        status = bundle.getInt("status", 0);
 
         // lock screen orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -216,10 +211,8 @@ public class GameActivity extends AppCompatActivity {
         Button btnSubmit = findViewById(R.id.btn_submit);
         btnSubmit.setTypeface(AppConstant.APP_FONT);
 
-//        String solutionString = bundle.getString("solutionString", "none");
-//        String gridString = bundle.getString("gridString", "none");
-        String solutionString = "none";
-        String gridString = "none";
+        String solutionString = bundle.getString("solutionString", "none");
+        String gridString = bundle.getString("gridString", "none");
         if (solutionString.equals("none") || gridString.equals("none")) {
             generateGrid();
         } else {
@@ -228,8 +221,7 @@ public class GameActivity extends AppCompatActivity {
 
         numpad = new Numpad(this);
 
-//        int elapsedTime = bundle.getInt("elapsedSeconds", 0);
-        int elapsedTime = 0;
+        int elapsedTime = bundle.getInt("elapsedSeconds", 0);
         timer = new Timer(this, elapsedTime);
         timer.start();
     }
@@ -241,67 +233,67 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-//    public void onClickSubmit(View view) {
-//        if (!grid.isLegalGrid()) {
-//            Toast.makeText(this, "Hãy hoàn thiện bảng", LENGTH_LONG).show();
-//            return;
-//        }
-//        if (solver.checkValidGrid(grid.getNumbers())) {
-//            Toast.makeText(this, "Chúc mừng, đáp án chính xác", LENGTH_LONG).show();
-//            status = 0;
-//            if (status >= 0) {
-//                AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
-//                dialog.setMessage("Bạn có muốn lưu kết quả trên bảng xếp hạng?")
-//                        .setTitle("Thông báo\n")
-//                        .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                saveAchievement();
-//                            }
-//                        })
-//                        .setNegativeButton("Từ chối", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                dialogInterface.cancel();
-//                            }
-//                        })
-//                        .show();
-//                timer.stop();
-//                status = 1;
-//            }
-//            // set status to GAME_DONE
-//            status = -3;
-//        } else {
-//            Toast.makeText(this, "Đáp án sai", LENGTH_LONG).show();
-//        }
-//    }
+    public void onClickSubmit(View view) {
+        if (!grid.isLegalGrid()) {
+            Toast.makeText(this, "Hãy hoàn thiện bảng", LENGTH_LONG).show();
+            return;
+        }
+        if (solver.checkValidGrid(grid.getNumbers())) {
+            Toast.makeText(this, "Chúc mừng, đáp án chính xác", LENGTH_LONG).show();
+            status = 0;
+            if (status >= 0) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
+                dialog.setMessage("Bạn có muốn lưu kết quả trên bảng xếp hạng?")
+                        .setTitle("Thông báo\n")
+                        .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                saveAchievement();
+                            }
+                        })
+                        .setNegativeButton("Từ chối", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        })
+                        .show();
+                timer.stop();
+                status = 1;
+            }
+            // set status to GAME_DONE
+            status = -3;
+        } else {
+            Toast.makeText(this, "Đáp án sai", LENGTH_LONG).show();
+        }
+    }
 
-//    private void saveAchievement() {
-//        Intent intent = new Intent(this, SaveAchievementActivity.class);
-//        intent.putExtra("difficulty", difficulty);
-//        intent.putExtra("elapsedSeconds", timer.getElapsedSeconds());
-//        startActivity(intent);
-//    }
+    private void saveAchievement() {
+        Intent intent = new Intent(this, SaveAchievementActivity.class);
+        intent.putExtra("difficulty", difficulty);
+        intent.putExtra("elapsedSeconds", timer.getElapsedSeconds());
+        startActivity(intent);
+    }
 
     public void onClickSolve() {
         if(status >= 0) {
-//            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
-//            dialog.setMessage("Nếu sử dụng tính năng này, kết quả của bạn sẽ không được công nhận trên bảng xếp hạng. \nBạn có chắc chắn muốn sử dụng?")
-//                    .setTitle("Chú ý\n")
-//                    .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            status = -2;
-//                            onClickSolve();
-//                        }
-//                    })
-//                    .setNegativeButton("Từ chối", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            dialogInterface.cancel();
-//                        }
-//                    })
-//                    .show();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
+            dialog.setMessage("Nếu sử dụng tính năng này, kết quả của bạn sẽ không được công nhận trên bảng xếp hạng. \nBạn có chắc chắn muốn sử dụng?")
+                    .setTitle("Chú ý\n")
+                    .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            status = -2;
+                            onClickSolve();
+                        }
+                    })
+                    .setNegativeButton("Từ chối", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    })
+                    .show();
         }
 
         if(status < 0) {
