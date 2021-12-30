@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Sudoker</string>
     <string name="todo">TODO</string>
+    <string name="tutorial">Tutorial text</string>
+    <string name="app_font"> FallingSkyBd.otf </string>
+
 </resources>
