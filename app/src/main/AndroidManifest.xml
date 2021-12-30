@@ -12,18 +12,24 @@
         tools:replace="android:appComponentFactory"
         android:appComponentFactory="android.support.v4.app.CoreComponentFactory"
         android:theme="@style/AppTheme">
-        <activity android:name=".DifficultyMenuActivity">
+        <activity android:name=".DifficultyMenuActivity"
+            android:exported="true"
+            tools:node="merge">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenuActivity">
+        <activity android:name=".MainMenuActivity"
+            android:exported="true"
+            tools:node="merge">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameActivity">
+        <activity android:name=".GameActivity"
+            android:exported="true"
+            tools:node="merge">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
