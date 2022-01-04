@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/GAME_BACKGROUND_COLOR">
+        android:background="@drawable/app_background">
 
         <RelativeLayout
             android:id="@+id/layout_top"
@@ -51,7 +51,8 @@
                 android:text="Submit"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <GridView
@@ -89,12 +90,6 @@
             android:padding="3dp"
             android:verticalSpacing="2dp"
             android:visibility="invisible"></GridView>
-
-        <TextView
-            android:id="@+id/text_sudoku"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Default Text" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

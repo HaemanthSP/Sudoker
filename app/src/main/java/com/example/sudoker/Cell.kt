@@ -136,10 +136,10 @@ class Cell(
         setBackgroundResource(defaultColor)
         if (highlightColor == R.color.HIGHLIGHT_LOCKED_CELL_COLOR) {
             isLocked = true
-            setTextColor(Color.BLACK)
+            setTextColor(R.color.teal_700)
         } else {
             isLocked = false
-            setTextColor(Color.BLUE)
+            setTextColor(Color.CYAN)
         }
     }
 }
