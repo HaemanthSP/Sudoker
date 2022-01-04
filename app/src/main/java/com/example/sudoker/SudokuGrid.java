@@ -25,7 +25,6 @@ public class SudokuGrid {
         mContext = context;
         mGridView = ((AppCompatActivity) context).findViewById(R.id.grid_sudoku);
         mTestText = ((AppCompatActivity) context).findViewById(R.id.text_sudoku);
-        mTestText.setText("Reached SudoKuGrid");
 
         for (int row = 0; row < 9; ++row) {
             for (int col = 0; col < 9; ++col) {

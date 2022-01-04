@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        AppConstant.init(this)
+
 
         // Hide the status bar
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
