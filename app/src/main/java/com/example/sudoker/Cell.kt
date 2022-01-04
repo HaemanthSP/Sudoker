@@ -19,6 +19,8 @@ class Cell(
 //    val highlightColor: Int,
 ) : AppCompatTextView(
     context!!) {
+    constructor(context: Context) : this(context, 0, R.color.EVEN_BOX_COLOR)
+
     private val markedColor: Int
     var isLocked = false
     private var isMarked = false
