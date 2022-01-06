@@ -1,8 +1,8 @@
-package android.hfad.com.sudoku;
+package com.example.sudoker;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.widget.TextView;
 
@@ -11,7 +11,7 @@ public class Timer {
     private Handler handler;
     private Runnable runnable;
     private int elapsedTime;
-    private Context context;
+    private final Context context;
     private TextView timeText;
 
     public Timer(Context context, int elapsedTime) {
@@ -42,11 +42,13 @@ public class Timer {
         return elapsedTime;
     }
 
+    @SuppressLint("DefaultLocale")
     public String getElapsedTimeString () {
         int seconds = elapsedTime % 60;
         int minutes = elapsedTime / 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
+    @SuppressLint("DefaultLocale")
     static public String getTimeFormat (int totalSeconds) {
         int hours = totalSeconds / 3600;
         int minutes = totalSeconds / 60;

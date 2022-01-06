@@ -1,4 +1,4 @@
-package android.hfad.com.sudoku;
+package com.example.sudoker;
 
 import android.app.Activity;
 import android.content.Context;

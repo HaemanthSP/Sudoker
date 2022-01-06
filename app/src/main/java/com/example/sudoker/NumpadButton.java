@@ -1,4 +1,4 @@
-package android.hfad.com.sudoku;
+package com.example.sudoker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -44,7 +44,7 @@ public class NumpadButton extends TextView {
         }
         else {
             setTextSize(20);
-            setTextColor(Color.BLUE);
+            setTextColor(Color.WHITE);
         }
     }
 

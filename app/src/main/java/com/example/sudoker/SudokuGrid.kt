@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.widget.GridView
-import android.widget.TextView
 import android.widget.BaseAdapter
 import android.view.ViewGroup
 import android.view.Gravity
@@ -15,9 +14,10 @@ class SudokuGrid(private val mContext: Context, masks: Array<IntArray>, solution
     private val mCells: Array<Array<Cell>> = Array(9) {Array(9){Cell(mContext)}}
     private val mGridView: GridView = (mContext as AppCompatActivity).findViewById(R.id.grid_sudoku)
     private val mBoxes = arrayOfNulls<Box>(9)
-    var selectedCell: Cell? = null
-        private set
+    private lateinit var mselectedCell: Cell
     private val mSolution = Array(9) { IntArray(9) }
+
+    // What is a mask of a cell?
     val currentMasks: Array<IntArray>
         get() {
             val values = Array(9) { IntArray(9) }
@@ -28,6 +28,7 @@ class SudokuGrid(private val mContext: Context, masks: Array<IntArray>, solution
             }
             return values
         }
+
     val numbers: Array<IntArray>
         get() {
             val values = Array(9) { IntArray(9) }
@@ -46,7 +47,7 @@ class SudokuGrid(private val mContext: Context, masks: Array<IntArray>, solution
         for (row in 0..8) {
             for (col in 0..8) {
                 if (mCells[row][col].isLocked) {
-                    val box = row / 3 * 3 + col / 3
+                    val box = (row / 3) * 3 + col / 3
                     val number = mCells[row][col].number
                     rows[row][number] = true
                     cols[col][number] = true
@@ -60,8 +61,8 @@ class SudokuGrid(private val mContext: Context, masks: Array<IntArray>, solution
                     var mask = 1022 // full numbers = 2^10 - 2.
                     val box = row / 3 * 3 + col / 3
                     for (x in 1..9) {
-                        if (rows[row][x] || cols[col][x] || boxes[box][x]) mask =
-                            mask and (1 shl x).inv()
+                        if (rows[row][x] || cols[col][x] || boxes[box][x])
+                            mask = mask and (1 shl x).inv()
                     }
                     mCells[row][col].setMask(mask)
                 }
@@ -69,10 +70,14 @@ class SudokuGrid(private val mContext: Context, masks: Array<IntArray>, solution
         }
     }
 
+    fun getSelectedCell(): Cell {
+        return mselectedCell
+    }
+
     fun setSelectedCell(index: Int) {
         val row = index / 9
         val col = index - row * 9
-        selectedCell = mCells[row][col]
+        mselectedCell = mCells[row][col]
     }
 
     val isLegalGrid: Boolean
@@ -104,10 +109,10 @@ class SudokuGrid(private val mContext: Context, masks: Array<IntArray>, solution
     fun highlightNeighborCells(index: Int) {
         val row = index / 9
         val col = index - row * 9
-        val box = row / 3 * 3 + col / 3
+        val box = (row / 3) * 3 + col / 3
         for (i in 0..8) {
             for (j in 0..8) {
-                val k = i / 3 * 3 + j / 3
+                val k = (i / 3) * 3 + j / 3
                 if (i == row || j == col || k == box) {
                     mCells[i][j].setHighLight()
                 } else {
@@ -194,14 +199,9 @@ class SudokuGrid(private val mContext: Context, masks: Array<IntArray>, solution
                 mSolution[row][col] = solution[row][col]
 
                 // initialize cell
-                val highlightColor =
-                    if (solution[row][col] <= 9) R.color.HIGHLIGHT_LOCKED_CELL_COLOR else R.color.HIGHLIGHT_EMPTY_CELL_COLOR
-                val defaultColor =
-                    if (box % 2 == 0) R.color.EVEN_BOX_COLOR else R.color.ODD_BOX_COLOR
+                val defaultColor = if (box % 2 == 0) R.color.EVEN_BOX_COLOR else R.color.ODD_BOX_COLOR
 
-//                mCells[row][col] = new Cell(context.getApplicationContext(), row * 9 + col, defaultColor, highlightColor);
-                mCells[row][col] =
-                    Cell(mContext.getApplicationContext(), row * 9 + col, defaultColor)
+                mCells[row][col] = Cell(mContext, row * 9 + col, defaultColor, solution[row][col] <= 9);
                 mCells[row][col].setMask(masks[row][col])
             }
         }

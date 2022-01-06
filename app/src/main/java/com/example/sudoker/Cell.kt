@@ -2,27 +2,27 @@ package com.example.sudoker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.appcompat.widget.AppCompatTextView
 import android.view.MotionEvent
 import android.view.Gravity
+import android.view.View
 import java.util.HashMap
 
 /**
  * Created by tuana on 14-03-2018.
  */
-@SuppressLint("ResourceAsColor")
 class Cell(
     context: Context?,
     val index: Int,
-    val defaultColor: Int
-//    val highlightColor: Int,
-) : AppCompatTextView(
-    context!!) {
-    constructor(context: Context) : this(context, 0, R.color.EVEN_BOX_COLOR)
+    val defaultColor: Int,
+    val isLocked: Boolean): AppCompatTextView(context!!) {
+
+    var highColor: Int
+    constructor(context: Context) : this(context, 0, R.color.EVEN_BOX_COLOR, true)
 
     private val markedColor: Int
-    var isLocked = false
     private var isMarked = false
     private var mask = 0
     val state: CellState
@@ -58,13 +58,20 @@ class Cell(
         }
 
     fun setHighLight() {
-        val color = if (isMarked) MARKED_CELL_COLOR else highlightColor
+        val color = if (isMarked) MARKED_CELL_COLOR else highColor
         setBackgroundResource(color)
+        if (!isLocked) setTextColor(Color.DKGRAY)
     }
 
     fun setNoHighLight() {
         val color = if (isMarked) MARKED_CELL_COLOR else defaultColor
         setBackgroundResource(color)
+        if (isLocked) {
+            setTextColor(Color.WHITE)
+        } else {
+            setTextColor(Color.YELLOW)
+
+        }
     }
 
     fun setMask(mask: Int) {
@@ -91,15 +98,15 @@ class Cell(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-//        GameActivity.highlightNeighborCells(index);
-//        if (isLocked) {
-//            GameActivity.setNumpadVisible(View.INVISIBLE);
-//        } else {
+        GameActivity.highlightNeighborCells(index);
+        if (isLocked) {
+            GameActivity.setNumpadVisible(View.INVISIBLE);
+        } else {
         setBackgroundResource(if (isMarked) R.color.MARKED_CELL_COLOR else R.color.TARGET_CELL_COLOR)
-        //            GameActivity.setNumpadVisible(View.VISIBLE);
-//        }
-//        GameActivity.setSelectedCell(index);
-//        GameActivity.updateNumpad();
+                    GameActivity.setNumpadVisible(View.VISIBLE);
+        }
+        GameActivity.setSelectedCell(index);
+        GameActivity.updateNumpad();
         return true
     }
 
@@ -134,12 +141,12 @@ class Cell(
         gravity = Gravity.CENTER
         typeface = AppConstant.APP_FONT
         setBackgroundResource(defaultColor)
-        if (highlightColor == R.color.HIGHLIGHT_LOCKED_CELL_COLOR) {
-            isLocked = true
-            setTextColor(R.color.teal_700)
+        if (isLocked) {
+            highColor = R.color.HIGHLIGHT_LOCKED_CELL_COLOR
+            setTextColor(Color.WHITE)
         } else {
-            isLocked = false
-            setTextColor(Color.CYAN)
+            highColor = R.color.HIGHLIGHT_EMPTY_CELL_COLOR
+            setTextColor(Color.YELLOW)
         }
     }
 }

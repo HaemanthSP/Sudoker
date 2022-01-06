@@ -36,7 +36,7 @@
                 android:layout_marginBottom="10px"
                 android:gravity="center"
                 android:text="00:00"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@android:color/white"
                 android:textSize="30dp"
                 android:textStyle="bold" />
 

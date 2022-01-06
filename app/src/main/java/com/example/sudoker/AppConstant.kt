@@ -11,8 +11,9 @@ import com.example.sudoker.R
  * Created by tuana on 19-03-2018.
  */
 object AppConstant {
+    lateinit var APP_FONT: Typeface
     var SCREEN_SIZE: Point? = null
-    var APP_FONT: Typeface? = null
+//    var APP_FONT: Typeface? = null
     var BOX_LINE_SPACING = 4
     var BOX_HEIGHT = 0
     fun init(context: Context) {

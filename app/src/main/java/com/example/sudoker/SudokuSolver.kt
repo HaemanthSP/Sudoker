@@ -8,24 +8,17 @@ import java.util.*
 class SudokuSolver {
     private val values = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
     private val rnd = Random()
-    private val grid: Array<IntArray>
-    private val rows: Array<BooleanArray>
-    private val cols: Array<BooleanArray>
-    private val boxes: Array<BooleanArray>
+    private var grid: Array<IntArray> = Array(9) { IntArray(9) }
+    private var rows: Array<BooleanArray> = Array(9) { BooleanArray(10) }
+    private var cols: Array<BooleanArray> = Array(9) { BooleanArray(10) }
+    private var boxes: Array<BooleanArray> = Array(9) { BooleanArray(10) }
     private var genFlag = false
+
     private fun clearGrid() {
-        for (r in 0..8) {
-            for (c in 0..8) {
-                grid[r][c] = 0
-            }
-        }
-        for (i in 0..8) {
-            for (v in 1..9) {
-                rows[i][v] = false
-                cols[i][v] = false
-                boxes[i][v] = false
-            }
-        }
+        grid = Array(9) {IntArray(9){0}}
+        rows = Array(9) {BooleanArray(10){false}}
+        cols = Array(9) {BooleanArray(10){false}}
+        boxes = Array(9){BooleanArray(10){false}}
     }
 
     private fun randomValuesArray(numberOfTurns: Int) {
@@ -97,10 +90,6 @@ class SudokuSolver {
     }
 
     init {
-        grid = Array(9) { IntArray(9) }
-        rows = Array(9) { BooleanArray(10) }
-        cols = Array(9) { BooleanArray(10) }
-        boxes = Array(9) { BooleanArray(10) }
         randomValuesArray(10)
     }
 }
